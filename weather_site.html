@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода 2007</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f0f4f8;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 400;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 10px;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #64748b;
+        }
+        .error {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #dc2626;
+            background: #fee2e2;
+            border-radius: 12px;
+        }
+        .month-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .month-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 30px;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .month-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .month-btn:hover:not(:disabled) {
+            background: #94a3b8;
+            color: white;
+        }
+        .month-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-collapse: collapse;
+        }
+        th {
+            background: #1e293b;
+            color: white;
+            font-weight: 500;
+            padding: 14px 10px;
+            text-align: center;
+            font-size: 15px;
+        }
+        td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #e9eef2;
+            color: #334155;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: #f8fafc;
+        }
+        .condition {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .condition.ясно { background: #fef9c3; color: #854d0e; }
+        .condition.облачно { background: #e0f2fe; color: #0369a1; }
+        .condition.переменная-облачность { background: #e0f2fe; color: #0369a1; }
+        .condition.дождь { background: #cbd5e1; color: #1e293b; }
+        .condition.снег { background: #e4e4e7; color: #3f3f46; }
+        .footer {
+            margin-top: 30px;
+            color: #64748b;
+            font-size: 14px;
+            text-align: right;
+            padding: 10px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .file-info {
+            background: #f1f5f9;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #475569;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            🌡️ Архив погоды 2007 
+            <span class="badge" id="location">Москва</span>
+            <span class="file-info" id="fileInfo">загрузка...</span>
+        </h1>
+        
+        <div id="loading" class="loading">⏳ Загрузка данных...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="content" style="display: none;">
+            <div class="month-nav" id="monthNav">
+                <!-- кнопки месяцев будут созданы динамически -->
+            </div>
+
+            <div class="stats" id="stats">
+                <!-- статистика подставится через js -->
+            </div>
+
+            <table id="weatherTable">
+                <thead>
+                    <tr>
+                        <th>День</th>
+                        <th>Температура (°C)</th>
+                        <th>Влажность (%)</th>
+                        <th>Давление (мм рт.ст.)</th>
+                        <th>Условия</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- данные подставятся через js -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            Данные из файла <span id="filename">weather.json</span> • 2007
+        </div>
+    </div>
+
+    <script>
+        // ==================== ЗАГРУЗКА ДАННЫХ ИЗ JSON ====================
+        let weatherData = null;
+        let currentMonth = null;
+
+        // Функция загрузки JSON
+        async function loadWeatherData() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const contentEl = document.getElementById('content');
+            const fileInfoEl = document.getElementById('fileInfo');
+            
+            try {
+                // Пытаемся загрузить файл
+                const response = await fetch('weather.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Проверяем структуру
+                if (!data.weather_database) {
+                    throw new Error('Неверная структура JSON: отсутствует weather_database');
+                }
+                
+                weatherData = data.weather_database;
+                
+                // Обновляем информацию
+                document.getElementById('location').textContent = weatherData.location || 'Москва';
+                fileInfoEl.textContent = `📁 загружен, ${Object.keys(weatherData.months || {}).length} месяца`;
+                document.getElementById('filename').textContent = 'weather.json';
+                
+                // Скрываем загрузку, показываем контент
+                loadingEl.style.display = 'none';
+                contentEl.style.display = 'block';
+                
+                // Инициализируем интерфейс
+                initMonths();
+                
+            } catch (error) {
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorEl.innerHTML = `
+                    <strong>❌ Ошибка загрузки данных</strong><br>
+                    ${error.message}<br><br>
+                    <span style="font-size: 14px;">Убедитесь, что файл <strong>weather.json</strong> лежит рядом с index.html</span>
+                `;
+                console.error('Ошибка:', error);
+            }
+        }
+
+        // ==================== ЛОГИКА ОТОБРАЖЕНИЯ ====================
+        function initMonths() {
+            const months = weatherData.months;
+            const monthNav = document.getElementById('monthNav');
+            
+            // Создаем кнопки для каждого месяца
+            const monthNames = {
+                'september': 'Сентябрь',
+                'october': 'Октябрь',
+                'december': 'Декабрь'
+            };
+            
+            let buttonsHtml = '';
+            let firstMonth = null;
+            
+            for (const [key, value] of Object.entries(months)) {
+                if (!firstMonth) firstMonth = key;
+                const displayName = monthNames[key] || key;
+                buttonsHtml += `<button class="month-btn" data-month="${key}">${displayName}</button>`;
+            }
+            
+            monthNav.innerHTML = buttonsHtml;
+            
+            // Навешиваем обработчики
+            document.querySelectorAll('.month-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    switchMonth(e.target.dataset.month);
+                });
+            });
+            
+            // Показываем первый месяц
+            if (firstMonth) {
+                switchMonth(firstMonth);
+            }
+        }
+
+        function formatCondition(condition) {
+            return condition.replace(' ', '-');
+        }
+
+        function calculateStats(monthData) {
+            const days = monthData.days;
+            const temps = days.map(d => d.temperature);
+            const avgTemp = (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1);
+            const maxTemp = Math.max(...temps).toFixed(1);
+            const minTemp = Math.min(...temps).toFixed(1);
+            
+            const rainDays = days.filter(d => d.condition.includes('дождь')).length;
+            const snowDays = days.filter(d => d.condition.includes('снег')).length;
+            const clearDays = days.filter(d => d.condition.includes('ясно')).length;
+            
+            return { avgTemp, maxTemp, minTemp, rainDays, snowDays, clearDays };
+        }
+
+        function renderStats(monthName) {
+            const monthData = weatherData.months[monthName];
+            const stats = calculateStats(monthData);
+            
+            let statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-label">Средняя t°</div>
+                    <div class="stat-value">${stats.avgTemp}°C</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Макс. t°</div>
+                    <div class="stat-value">${stats.maxTemp}°C</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Мин. t°</div>
+                    <div class="stat-value">${stats.minTemp}°C</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Дождей</div>
+                    <div class="stat-value">${stats.rainDays}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Снега</div>
+                    <div class="stat-value">${stats.snowDays}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ясных дней</div>
+                    <div class="stat-value">${stats.clearDays}</div>
+                </div>
+            `;
+            
+            document.getElementById('stats').innerHTML = statsHtml;
+        }
+
+        function renderTable(monthName) {
+            const monthData = weatherData.months[monthName];
+            let rows = '';
+            
+            monthData.days.forEach(day => {
+                const conditionClass = formatCondition(day.condition);
+                rows += `
+                    <tr>
+                        <td><strong>${day.day}</strong></td>
+                        <td>${day.temperature > 0 ? '+' : ''}${day.temperature}°</td>
+                        <td>${day.humidity}%</td>
+                        <td>${day.pressure}</td>
+                        <td><span class="condition ${conditionClass}">${day.condition}</span></td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('tableBody').innerHTML = rows;
+        }
+
+        function switchMonth(month) {
+            currentMonth = month;
+            
+            // подсветка кнопок
+            document.querySelectorAll('.month-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.month === month) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            renderStats(month);
+            renderTable(month);
+        }
+
+        // Запускаем загрузку при загрузке страницы
+        window.addEventListener('load', loadWeatherData);
+    </script>
+</body>
+</html>
