@@ -1,0 +1,64 @@
+{
+  "game_version": "1.5.0",
+  "last_updated": "2025-02-25",
+  "locations": [
+    {
+      "id": 1,
+      "name": "Penthouse Diamond",
+      "district": "Даунтаун",
+      "type": "пентхаус",
+      "size": 350,
+      "rooms": {
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "total_rooms": 8
+      },
+      "features": {
+        "garage": true,
+        "pool": true,
+        "gym": true,
+        "cinema": false,
+        "helipad": true,
+        "security": "круглосуточная"
+      },
+      "interior": {
+        "style": "современный",
+        "furniture": "премиум",
+        "view": "панорамный"
+      },
+      "price": 8500000,
+      "monthly_fee": 15000,
+      "is_available": true,
+      "owner": null
+    },
+    {
+      "id": 2,
+      "name": "Vinewood Hills Estate",
+      "district": "Вайнвуд",
+      "type": "особняк",
+      "size": 850,
+      "rooms": {
+        "bedrooms": 6,
+        "bathrooms": 5,
+        "total_rooms": 15
+      },
+      "features": {
+        "garage": true,
+        "pool": true,
+        "gym": true,
+        "cinema": true,
+        "helipad": true,
+        "security": "частная охрана"
+      },
+      "interior": {
+        "style": "классический",
+        "furniture": "элитный",
+        "view": "город + океан"
+      },
+      "price": 25000000,
+      "monthly_fee": 45000,
+      "is_available": false,
+      "owner": "MAD_DOGG_99"
+    }
+  ]
+}
