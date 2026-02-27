@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: aurora-motors-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=aurora_user
+      - MYSQL_PASSWORD=aurora_pass
+      - MYSQL_DATABASE=aurora_db
+    networks:
+      - aurora-network
+
+  db:
+    image: mysql:5.7
+    container_name: aurora-motors-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword123
+      - MYSQL_DATABASE=aurora_db
+      - MYSQL_USER=aurora_user
+      - MYSQL_PASSWORD=aurora_pass
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    networks:
+      - aurora-network
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: aurora-motors-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=rootpassword123
+      - UPLOAD_LIMIT=100M
+    depends_on:
+      - db
+    networks:
+      - aurora-network
+
+volumes:
+  db_data:
+
+networks:
+  aurora-network:
+    driver: bridge
