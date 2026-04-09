@@ -1,0 +1,33 @@
+=== USER ACTIVITY LOGS ===
+[2024-03-21 08:15:23] [INFO] [USER:ivan_petrov] [ID:1] [ACTION:login] [STATUS:success] [IP:192.168.1.105] [Session:sess_abc123]
+[2024-03-21 08:16:45] [INFO] [USER:ivan_petrov] [ID:1] [ACTION:view_dashboard] [STATUS:success] [IP:192.168.1.105]
+[2024-03-21 09:30:12] [INFO] [USER:maria_s] [ID:2] [ACTION:login] [STATUS:success] [IP:192.168.1.110] [Session:sess_def456]
+[2024-03-21 09:35:22] [INFO] [USER:maria_s] [ID:2] [ACTION:update_profile] [STATUS:success] [IP:192.168.1.110] [Changed:full_name,phone]
+[2024-03-21 10:20:10] [INFO] [USER:ivan_petrov] [ID:1] [ACTION:create_post] [STATUS:success] [PostID:5001] [Title:"Как работает JSON"]
+[2024-03-21 11:05:33] [WARN] [USER:alex_kuz] [ID:3] [ACTION:login] [STATUS:failed] [IP:192.168.1.115] [Reason:invalid_password] [Attempts:3]
+[2024-03-21 11:10:15] [ERROR] [USER:alex_kuz] [ID:3] [ACTION:login] [STATUS:failed] [IP:192.168.1.115] [Reason:account_locked] [Lockout:300s]
+[2024-03-21 12:45:18] [INFO] [USER:elena_volk] [ID:4] [ACTION:delete_user] [STATUS:success] [IP:192.168.1.120] [TargetUser:temp_user] [Reason:inactive]
+[2024-03-21 13:22:09] [INFO] [USER:maria_s] [ID:2] [ACTION:change_password] [STATUS:success] [IP:192.168.1.110] [Method:manual_reset]
+[2024-03-21 14:10:45] [INFO] [USER:ivan_petrov] [ID:1] [ACTION:logout] [STATUS:success] [IP:192.168.1.105] [Duration:21582s]
+[2024-03-21 15:00:30] [INFO] [USER:maria_s] [ID:2] [ACTION:export_data] [STATUS:success] [IP:192.168.1.110] [Format:csv] [Size:245KB]
+[2024-03-21 15:45:22] [WARN] [USER:elena_volk] [ID:4] [ACTION:ban_user] [STATUS:success] [IP:192.168.1.120] [Target:spammer_2024] [Reason:spam] [Days:30]
+[2024-03-21 16:20:15] [INFO] [USER:alex_kuz] [ID:3] [ACTION:login] [STATUS:success] [IP:192.168.1.115] [Method:2fa] [Session:sess_ghi789]
+
+=== ACCESS DENIED LOGS ===
+[2024-03-21 08:30:00] [DENIED] [USER:unknown] [IP:10.0.0.45] [ACTION:api_access] [Resource:/admin/users] [Reason:unauthorized]
+[2024-03-21 12:15:33] [DENIED] [USER:test_user] [ID:99] [IP:10.0.0.67] [ACTION:delete_post] [PostID:1234] [Reason:insufficient_permissions]
+
+=== SYSTEM EVENTS ===
+[2024-03-21 00:00:00] [SYS] [EVENT:daily_backup] [STATUS:success] [Records:245] [Size:12MB]
+[2024-03-21 03:30:00] [SYS] [EVENT:database_cleanup] [STATUS:success] [DeletedLogs:156] [OldRecords:>90days]
+[2024-03-21 17:00:00] [SYS] [EVENT:log_rotation] [STATUS:success] [NewFile:user_logs_2024-03-21.txt]
+
+=== STATISTICS ===
+Total logs today: 16
+Successful actions: 13
+Failed actions: 2
+Access denied: 2
+Unique users active: 4
+Most active user: ivan_petrov (5 actions)
+Peak hour: 09:00-10:00 (3 actions)
+Last updated: 2024-03-21 17:00:00
